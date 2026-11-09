@@ -1,0 +1,13 @@
+// Puts the engine message box templates (driver warning, crash notice) into the game exe.
+// The launcher engine does not link Launch's PCLaunch.rc into game executables, so
+// FWindowsDialog::Show (CreateDialogParam) failed with 0x715 and the game closed with no message.
+// If the engine starts linking it again, the link fails on duplicate resources: delete this file then.
+// (ASCII only: rc.exe reads this file with the system code page.)
+#include "Runtime/Launch/Resources/Windows/PCLaunch.rc"
+
+// UBT drops Default.rc2 (icon, version info) from an exe once a module has its own .rc
+// (UEBuildBinary::CompileResourceFiles), so the monolithic game exe includes it here.
+// DLL builds (editor) still get Default.rc2 from UBT, so it must not be included twice there.
+#if IS_MONOLITHIC
+#include "../Build/Windows/Resources/Default.rc2"
+#endif
